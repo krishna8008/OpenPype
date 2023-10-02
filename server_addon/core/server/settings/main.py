@@ -88,6 +88,19 @@ class VersionStartCategoryModel(BaseSettingsModel):
     )
 
 
+class DiskMappingModel(BaseSettingsModel):
+    _layout = "compact"
+    source: str = Field("", title="Source", scope=["studio"])
+    destination: str = Field("", title="Destination", scope=["studio"])
+
+
+class MultiplatformDiskMappingListModel(BaseSettingsModel):
+    windows: list[DiskMappingModel] = Field(default_factory=list,
+                                            title="Windows")
+    linux: list[DiskMappingModel] = Field(default_factory=list, title="Linux")
+    darwin: list[DiskMappingModel] = Field(default_factory=list, title="MacOS")
+
+
 class CoreSettings(BaseSettingsModel):
     studio_name: str = Field("", title="Studio name", scope=["studio"])
     studio_code: str = Field("", title="Studio code", scope=["studio"])
@@ -97,6 +110,12 @@ class CoreSettings(BaseSettingsModel):
         widget="textarea",
         scope=["studio"],
     )
+
+    disk_mapping: MultiplatformDiskMappingListModel = Field(
+        default_factory=MultiplatformDiskMappingListModel,
+        title="Disk mapping"
+    )
+
     tools: GlobalToolsModel = Field(
         default_factory=GlobalToolsModel,
         title="Tools"
